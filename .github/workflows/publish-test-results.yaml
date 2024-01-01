@@ -1,0 +1,45 @@
+# Per the advice from:
+# - https://octopus.com/blog/githubactions-running-unit-tests
+# - https://github.com/marketplace/actions/test-reporter
+
+name: Publish Test Results
+
+on:
+  workflow_run:
+    workflows: ['Run Tests']
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      # dorny/test-reporter has an `artifact:` attribute that will check out the
+      # repo and download test results automatically. However,
+      # dorny/test-reporter@v1 wasn't compatible with the bump to
+      # actions/upload-artifact@v4 in run-tests.yaml. So we manually check
+      # out the repo and download the results to avoid the rev lock.
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_commit.id }}
+
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Post test report
+        uses: dorny/test-reporter@v1
+        with:
+          name: Test Results
+          path: 'TESTS-TestSuites.xml'
+          reporter: java-junit
+          fail-on-error: true

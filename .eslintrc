@@ -1,0 +1,54 @@
+{
+  "env" : {
+    "node": true,
+    "es2023" : true
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@stylistic/js",
+    "vitest",
+    "jsdoc"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:jsdoc/recommended"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.test.js"],
+      "plugins": ["vitest"],
+      "extends": [
+        "plugin:vitest/recommended"
+      ]
+    }
+  ],
+  "rules" : {
+    "@stylistic/js/comma-dangle": [
+      "error", "never"
+    ],
+    "@stylistic/js/indent": [
+      "error", 2, { "VariableDeclarator": 2 }
+    ],
+    "@stylistic/js/keyword-spacing": [
+      "error"
+    ],
+    "@stylistic/js/max-len": [
+      "error", 80, 2, { "ignoreUrls": true }
+    ],
+    "@stylistic/js/quotes": [
+      "error", "single"
+    ],
+    "@stylistic/js/semi": [
+      "error", "never"
+    ],
+    "camelcase": [
+      "error", { "properties": "always" }
+    ],
+    "no-console": [
+      "error", { "allow": [ "warn", "error" ]}
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore: [ "**.md", "**.txt" ]
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore: [ "**.md", "**.txt" ]
+  workflow_dispatch:
+
+jobs:
+  build-test:
+    name: "Run Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+
+      - name: Install dependencies
+        run: "pnpm install"
+
+      - name: Build and test
+        run: "pnpm test:ci"
+
+      # Per the advice from:
+      # - https://github.com/marketplace/actions/test-reporter
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: 'TESTS-TestSuites.xml'
+
+      - name: Send test coverage to Coveralls.io
+        uses: coverallsapp/github-action@v2
+        with:
+          file: 'coverage/lcov.info'

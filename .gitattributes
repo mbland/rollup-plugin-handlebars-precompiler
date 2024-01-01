@@ -1,0 +1,5 @@
+# Ensure line endings remain LF on Windows, instead of getting
+# translated to CRLF. Otherwise, Bash chokes on \r characters.
+# - https://help.github.com/articles/dealing-with-line-endings/
+# - https://stackoverflow.com/a/47187309
+* text eol=lf

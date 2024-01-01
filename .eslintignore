@@ -1,0 +1,8 @@
+**/vendor/
+build/
+coverage/
+dist/
+jsdoc/
+node_modules/
+out/
+tmp/
