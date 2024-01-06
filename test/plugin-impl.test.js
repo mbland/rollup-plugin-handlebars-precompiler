@@ -98,14 +98,35 @@ describe('PluginImpl', () => {
       return expect.stringMatching(new RegExp(`^;{${numLines}}`))
     }
 
+    expect.extend({
+      toStartWith(received, expected) {
+        const actual = received.substring(0, expected.length)
+        return {
+          pass: actual === expected,
+          message: () => 'expected string to begin with expected prefix',
+          actual,
+          expected
+        }
+      },
+      toEndWith(received, expected) {
+        const actual = received.substring(received.length - expected.length)
+        return {
+          pass: actual === expected,
+          message: () => 'expected string to end with expected suffix',
+          actual,
+          expected
+        }
+      }
+    })
+
     test('emits precompiled template module and source map', () => {
       const impl = new PluginImpl()
 
       const { code, map } = impl.compile(templateStr, 'foo.hbs')
 
       const expectedPrefix = `${PREFIX}\n${BEGIN_TEMPLATE}`
-      expect(code.substring(0, expectedPrefix.length)).toBe(expectedPrefix)
-      expect(code.substring(code.length - SUFFIX.length)).toBe(SUFFIX)
+      expect(code).toStartWith(expectedPrefix)
+      expect(code).toEndWith(SUFFIX)
       expect(map).toMatchObject({
         sources: [ 'foo.hbs' ],
         mappings: mappingSkipsPrefix(expectedPrefix)
@@ -131,6 +152,70 @@ describe('PluginImpl', () => {
 
       expect(map).toHaveProperty('sources', [ 'foo.hbs' ])
       expect(map).not.toHaveProperty('file')
+    })
+
+    describe('imports partials using', () => {
+      const templateStr = '{{>bar}}{{>baz}}{{>quux}}'
+
+      test('DEFAULT_PARTIAL_PATH', () => {
+        const impl = new PluginImpl()
+
+        const { code, map } = impl.compile(templateStr, 'foo.hbs')
+
+        const expectedPrefix = [
+          PREFIX,
+          'import \'./_bar.hbs\'',
+          'import \'./_baz.hbs\'',
+          'import \'./_quux.hbs\'',
+          BEGIN_TEMPLATE
+        ].join('\n')
+        expect(code).toStartWith(expectedPrefix)
+        expect(code).toEndWith(SUFFIX)
+        expect(map).toMatchObject({
+          sources: [ 'foo.hbs' ],
+          mappings: mappingSkipsPrefix(expectedPrefix)
+        })
+      })
+
+      test('custom options.partialPath', () => {
+        const impl = new PluginImpl({
+          partialPath: (partialName) => `./${partialName}.partial.hbs`
+        })
+
+        const { code } = impl.compile(templateStr, 'foo.hbs')
+
+        const expectedPrefix = [
+          PREFIX,
+          'import \'./bar.partial.hbs\'',
+          'import \'./baz.partial.hbs\'',
+          'import \'./quux.partial.hbs\'',
+          BEGIN_TEMPLATE
+        ].join('\n')
+        expect(code).toStartWith(expectedPrefix)
+      })
+    })
+
+    describe('registers partials using', () => {
+      test('DEFAULT_PARTIALS filter and DEFAULT_PARTIAL_NAME', () => {
+        const impl = new PluginImpl()
+
+        const { code } = impl.compile(templateStr, '_foo.hbs')
+
+        const expected = 'Handlebars.registerPartial(\'foo\', RawTemplate)'
+        expect(code).toEndWith(`${SUFFIX}\n${expected}`)
+      })
+
+      test('custom options.partials and options.partialName', () => {
+        const impl = new PluginImpl({
+          partials: '**/*.partial.hbs',
+          partialName(id) { return id.replace(/\.partial\.hbs$/, '') }
+        })
+
+        const { code } = impl.compile(templateStr, 'foo.partial.hbs')
+
+        const expected = 'Handlebars.registerPartial(\'foo\', RawTemplate)'
+        expect(code).toEndWith(`${SUFFIX}\n${expected}`)
+      })
     })
   })
 })
