@@ -4,9 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { describe, expect, test } from 'vitest'
 import HandlebarsPrecompiler from '../index.js'
 import { PLUGIN_NAME } from '../lib/index.js'
+import { describe, expect, test } from 'vitest'
 
 const PLUGIN_ID = `\0${PLUGIN_NAME}`
 
