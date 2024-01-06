@@ -81,4 +81,56 @@ describe('PluginImpl', () => {
       expect(impl.isTemplate('quux/xyzzy/plugh.mustache')).toBe(false)
     })
   })
+
+  describe('compile()', () => {
+    const PREFIX = [
+      'import Handlebars from \'handlebars/lib/handlebars.runtime\'',
+      `import Render from '${PLUGIN_ID}'`
+    ].join('\n')
+    const BEGIN_TEMPLATE = 'export const RawTemplate = Handlebars.template(\n'
+    const SUFFIX = '\n)\nexport default Render(RawTemplate)'
+
+    const templateStr = '<p>Hello, {{ recipient }}</p>'
+
+    const mappingSkipsPrefix = (prefix) => {
+      // Really? All the methods on String and Array, and no .count()?
+      const numLines = prefix.length - prefix.replaceAll('\n', '').length
+      return expect.stringMatching(new RegExp(`^;{${numLines}}`))
+    }
+
+    test('emits precompiled template module and source map', () => {
+      const impl = new PluginImpl()
+
+      const { code, map } = impl.compile(templateStr, 'foo.hbs')
+
+      const expectedPrefix = `${PREFIX}\n${BEGIN_TEMPLATE}`
+      expect(code.substring(0, expectedPrefix.length)).toBe(expectedPrefix)
+      expect(code.substring(code.length - SUFFIX.length)).toBe(SUFFIX)
+      expect(map).toMatchObject({
+        sources: [ 'foo.hbs' ],
+        mappings: mappingSkipsPrefix(expectedPrefix)
+      })
+    })
+
+    describe('emits empty source map if', () => {
+      test.each(['sourceMap', 'sourcemap'])('options.%s === false', key => {
+        const impl = new PluginImpl({ [key]: false })
+
+        const { map } = impl.compile(templateStr, 'foo.hbs')
+
+        expect(map).toStrictEqual({ mappings: '' })
+      })
+    })
+
+    test('ignores options.compiler.{srcName,destName}', () => {
+      const impl = new PluginImpl({
+        compiler: { srcName: 'bar/baz.handlebars', destName: 'quux/xyzzy.js' }
+      })
+
+      const { map } = impl.compile(templateStr, 'foo.hbs')
+
+      expect(map).toHaveProperty('sources', [ 'foo.hbs' ])
+      expect(map).not.toHaveProperty('file')
+    })
+  })
 })
