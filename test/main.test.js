@@ -5,10 +5,8 @@
  */
 
 import HandlebarsPrecompiler from '../index.js'
-import { PLUGIN_NAME } from '../lib/index.js'
+import { PLUGIN_NAME, PLUGIN_ID } from '../lib/index.js'
 import { describe, expect, test } from 'vitest'
-
-const PLUGIN_ID = `\0${PLUGIN_NAME}`
 
 describe('HandlebarsPrecompiler', () => {
   const plugin = HandlebarsPrecompiler({
