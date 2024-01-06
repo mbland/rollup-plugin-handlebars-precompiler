@@ -44,7 +44,7 @@
 import { createFilter } from '@rollup/pluginutils'
 import Handlebars from 'handlebars'
 
-const PLUGIN_NAME = 'handlebars-precompiler'
+export const PLUGIN_NAME = 'handlebars-precompiler'
 const DEFAULT_INCLUDE = ['**/*.hbs', '**/*.handlebars', '**/*.mustache']
 const DEFAULT_EXCLUDE = 'node_modules/**'
 const DEFAULT_PARTIALS = '**/_*'
@@ -57,7 +57,7 @@ const DEFAULT_PARTIAL_PATH = (partialName, importerPath) => {
   return `./_${partialName}.${importerPath.replace(/.*\./, '')}`
 }
 
-const PLUGIN_ID = `\0${PLUGIN_NAME}`
+export const PLUGIN_ID = `\0${PLUGIN_NAME}`
 const HANDLEBARS_PATH = 'handlebars/lib/handlebars.runtime'
 const IMPORT_HANDLEBARS = `import Handlebars from '${HANDLEBARS_PATH}'`
 const IMPORT_HELPERS = `import Render from '${PLUGIN_ID}'`
