@@ -5,21 +5,18 @@
  */
 
 import { describe, expect, test } from 'vitest'
-import HandlebarsPrecompiler, * as Plugin from '../index.js'
+import HandlebarsPrecompiler from '../index.js'
+import { PLUGIN_NAME } from '../lib/index.js'
 
-const { PLUGIN_NAME, PLUGIN_ID } = Plugin
+const PLUGIN_ID = `\0${PLUGIN_NAME}`
 
 describe('HandlebarsPrecompiler', () => {
   const plugin = HandlebarsPrecompiler({
     helpers: ['foo.js']
   })
 
-  test(`.name is ${Plugin.PLUGIN_NAME}`, () => {
+  test(`.name is ${PLUGIN_NAME}`, () => {
     expect(plugin.name).toBe(PLUGIN_NAME)
-  })
-
-  test('PLUGIN_ID starts with null byte', () => {
-    expect(PLUGIN_ID[0]).toBe('\0')
   })
 
   describe('resolveId', () => {

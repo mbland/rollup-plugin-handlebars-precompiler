@@ -9,9 +9,7 @@
     "test:ci": "eslint --color --max-warnings 0 . && vitest run -c ci/vitest.config.js",
     "jsdoc": "jsdoc-cli-wrapper -c jsdoc.json ."
   },
-  "files": [
-    "index.js"
-  ],
+  "files": [ "index.js", "lib/*" ],
   "keywords": [
     "rollup",
     "handlebars",
