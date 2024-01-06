@@ -1,0 +1,14 @@
+{
+  "plugins": [ "plugins/markdown" ],
+  "recurseDepth": 10,
+  "source": {
+    "includePattern": ".+\\.js$",
+    "exclude": ["node_modules"]
+  },
+  "opts": {
+    "destination": "jsdoc",
+    "recurse": true,
+    "readme": "README.md",
+    "package": "package.json"
+  }
+}

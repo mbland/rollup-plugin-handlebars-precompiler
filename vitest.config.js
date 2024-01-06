@@ -5,7 +5,7 @@ export default defineConfig({
     outputFile: 'TESTS-TestSuites.xml',
     coverage: {
       reportsDirectory: 'coverage',
-      exclude: [...configDefaults.coverage.exclude, 'index.js', 'jsdoc', 'out']
+      exclude: [...configDefaults.coverage.exclude, 'jsdoc', 'out']
     }
   }
 })
