@@ -50,5 +50,12 @@
     "no-console": [
       "error", { "allow": [ "warn", "error" ]}
     ]
+  },
+  "settings": {
+    "jsdoc": {
+      "preferredTypes": {
+        "Object": "object"
+      }
+    }
   }
 }

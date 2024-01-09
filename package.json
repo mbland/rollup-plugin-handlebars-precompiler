@@ -44,7 +44,9 @@
     "jsdoc": "^4.0.2",
     "jsdoc-cli-wrapper": "^1.0.4",
     "jsdoc-plugin-typescript": "^2.2.1",
+    "jsdom": "^23.2.0",
     "rollup": "^4.9.4",
+    "test-page-opener": "^1.0.5",
     "typescript": "^5.3.3",
     "vitest": "^1.1.3"
   },

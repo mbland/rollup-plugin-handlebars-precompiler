@@ -2,10 +2,8 @@
 
 [Rollup][] plugin to precompile [Handlebars][] templates into [JavaScript modules][]
 
-_**Status**: I've still got a bit of work to do before publishing v1.0.0. I need
-to add tests based on the mbland/tomcat-servlet-testing-example project from
-whence this came and add more documentation. I plan to finish this by
-2024-01-11._
+_**Note**: I still need to add more documentation, but the plugin is fully
+functional and tested._
 
 Source: <https://github.com/mbland/rollup-plugin-handlebars-precompiler>
 
@@ -51,16 +49,6 @@ Each generated Handlebars template module exports two functions:
 
 Most of the time, you'll want to use the default export, imported as
 `Template()` by convention.
-
-## Configuration
-
-## Motivation
-
-## Examples
-
-My [mbland/tomcat-servlet-testing-example][] project
-
-### Component pattern
 
 ## Development
 
