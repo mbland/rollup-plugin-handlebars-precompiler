@@ -92,6 +92,12 @@ describe('PluginImpl', () => {
 
     const templateStr = '<p>Hello, {{ recipient }}</p>'
 
+    /**
+     * @param {string} prefix - generated code before the precompiled template
+     * @returns {any} - a Vitest matcher that returns true if it matches a
+     *   source map 'mappings' string that skips the number of lines in prefix
+     * @see https://vitest.dev/api/expect.html#expect-stringmatching
+     */
     const mappingSkipsPrefix = (prefix) => {
       // Really? All the methods on String and Array, and no .count()?
       const numLines = prefix.length - prefix.replaceAll('\n', '').length
@@ -122,7 +128,7 @@ describe('PluginImpl', () => {
     test('emits precompiled template module and source map', () => {
       const impl = new PluginImpl()
 
-      const { code, map } = impl.compile(templateStr, 'foo.hbs')
+      const { code, map } = impl.compile(templateStr, 'foo.hbs') ?? {}
 
       const expectedPrefix = `${PREFIX}\n${BEGIN_TEMPLATE}`
       expect(code).toStartWith(expectedPrefix)
@@ -137,7 +143,7 @@ describe('PluginImpl', () => {
       test.each(['sourceMap', 'sourcemap'])('options.%s === false', key => {
         const impl = new PluginImpl({ [key]: false })
 
-        const { map } = impl.compile(templateStr, 'foo.hbs')
+        const { map } = impl.compile(templateStr, 'foo.hbs') ?? {}
 
         expect(map).toStrictEqual({ mappings: '' })
       })
@@ -148,7 +154,7 @@ describe('PluginImpl', () => {
         compiler: { srcName: 'bar/baz.handlebars', destName: 'quux/xyzzy.js' }
       })
 
-      const { map } = impl.compile(templateStr, 'foo.hbs')
+      const { map } = impl.compile(templateStr, 'foo.hbs') ?? {}
 
       expect(map).toHaveProperty('sources', [ 'foo.hbs' ])
       expect(map).not.toHaveProperty('file')
@@ -160,7 +166,7 @@ describe('PluginImpl', () => {
       test('DEFAULT_PARTIAL_PATH', () => {
         const impl = new PluginImpl()
 
-        const { code, map } = impl.compile(templateStr, 'foo.hbs')
+        const { code, map } = impl.compile(templateStr, 'foo.hbs') ?? {}
 
         const expectedPrefix = [
           PREFIX,
@@ -182,7 +188,7 @@ describe('PluginImpl', () => {
           partialPath: (partialName) => `./${partialName}.partial.hbs`
         })
 
-        const { code } = impl.compile(templateStr, 'foo.hbs')
+        const { code } = impl.compile(templateStr, 'foo.hbs') ?? {}
 
         const expectedPrefix = [
           PREFIX,
@@ -199,7 +205,7 @@ describe('PluginImpl', () => {
       test('DEFAULT_PARTIALS filter and DEFAULT_PARTIAL_NAME', () => {
         const impl = new PluginImpl()
 
-        const { code } = impl.compile(templateStr, '_foo.hbs')
+        const { code } = impl.compile(templateStr, '_foo.hbs') ?? {}
 
         const expected = 'Handlebars.registerPartial(\'foo\', RawTemplate)'
         expect(code).toEndWith(`${SUFFIX}\n${expected}`)
@@ -211,7 +217,7 @@ describe('PluginImpl', () => {
           partialName(id) { return id.replace(/\.partial\.hbs$/, '') }
         })
 
-        const { code } = impl.compile(templateStr, 'foo.partial.hbs')
+        const { code } = impl.compile(templateStr, 'foo.partial.hbs') ?? {}
 
         const expected = 'Handlebars.registerPartial(\'foo\', RawTemplate)'
         expect(code).toEndWith(`${SUFFIX}\n${expected}`)
