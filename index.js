@@ -37,6 +37,8 @@
  */
 
 import PluginImpl, { PLUGIN_NAME } from './lib/index.js'
+// eslint-disable-next-line no-unused-vars
+import { PluginOptions, Transform } from './lib/types.js'
 
 /**
  * A Rollup plugin object for precompiling Handlebars templates.
@@ -44,17 +46,47 @@ import PluginImpl, { PLUGIN_NAME } from './lib/index.js'
  */
 
 /**
+ * @typedef {object} RollupPlugin
+ * @property {string} name - plugin name
+ * @property {Function} resolveId - resolves the plugin's own import ID
+ * @property {Function} load - emits the plugin's helper module code
+ * @property {Function} transform - emits JavaScript code compiled from
+ *   Handlebars templates
+ * @see https://rollupjs.org/plugin-development/
+ */
+
+/**
  * Returns a Rollup plugin object for precompiling Handlebars templates.
  * @function default
- * @param {object} options object containing Handlebars compiler API options
- * @returns {object} a Rollup plugin that precompiles Handlebars templates
+ * @param {PluginOptions} options - plugin configuration options
+ * @returns {RollupPlugin} - the configured plugin object
  */
 export default function HandlebarsPrecompiler(options) {
   const p = new PluginImpl(options)
   return {
     name: PLUGIN_NAME,
-    resolveId(id) { if (p.shouldEmitHelpersModule(id)) return id },
-    load(id) { if (p.shouldEmitHelpersModule(id)) return p.helpersModule() },
-    transform(code, id) { if (p.isTemplate(id)) return p.compile(code, id) }
+
+    /**
+     * @param {string} id - import identifier to resolve
+     * @returns {(string | undefined)} - the plugin ID if id matches it
+     * @see https://rollupjs.org/plugin-development/#resolveid
+     */
+    resolveId: function (id) {
+      return p.shouldEmitHelpersModule(id) ? id : undefined
+    },
+
+    /**
+     * @param {string} id - import identifier to load
+     * @returns {(string | undefined)} - the plugin helper module if id matches
+     * @see https://rollupjs.org/plugin-development/#load
+     */
+    load: function (id) {
+      return p.shouldEmitHelpersModule(id) ? p.helpersModule() : undefined
+    },
+
+    /** @type {Transform} */
+    transform: function (code, id) {
+      return p.isTemplate(id) ? p.compile(code, id) : undefined
+    }
   }
 }

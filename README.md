@@ -5,7 +5,7 @@
 _**Status**: I've still got a bit of work to do before publishing v1.0.0. I need
 to add tests based on the mbland/tomcat-servlet-testing-example project from
 whence this came and add more documentation. I plan to finish this by
-2024-01-08._
+2024-01-11._
 
 Source: <https://github.com/mbland/rollup-plugin-handlebars-precompiler>
 
