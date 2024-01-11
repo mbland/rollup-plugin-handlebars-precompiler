@@ -2,7 +2,8 @@
   "compilerOptions": {
     "checkJs": true,
     "lib": [
-      "ES2022"
+      "ES2022",
+      "DOM"
     ],
     "module": "node16",
     "target": "es2020",

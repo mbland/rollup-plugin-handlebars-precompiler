@@ -1,9 +1,15 @@
 {
-  "plugins": [ "plugins/markdown" ],
+  "plugins": [
+    "plugins/markdown",
+    "jsdoc-plugin-typescript"
+  ],
   "recurseDepth": 10,
   "source": {
     "includePattern": ".+\\.js$",
     "exclude": ["node_modules"]
+  },
+  "typescript": {
+    "moduleRoot": "."
   },
   "opts": {
     "destination": "jsdoc",

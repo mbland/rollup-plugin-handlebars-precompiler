@@ -38,7 +38,7 @@
 
 import PluginImpl, { PLUGIN_NAME } from './lib/index.js'
 // eslint-disable-next-line no-unused-vars
-import { PluginOptions, Transform } from './lib/types.js'
+import { PluginOptions } from './lib/types.js'
 
 /**
  * A Rollup plugin object for precompiling Handlebars templates.
@@ -46,20 +46,11 @@ import { PluginOptions, Transform } from './lib/types.js'
  */
 
 /**
- * @typedef {object} RollupPlugin
- * @property {string} name - plugin name
- * @property {Function} resolveId - resolves the plugin's own import ID
- * @property {Function} load - emits the plugin's helper module code
- * @property {Function} transform - emits JavaScript code compiled from
- *   Handlebars templates
- * @see https://rollupjs.org/plugin-development/
- */
-
-/**
  * Returns a Rollup plugin object for precompiling Handlebars templates.
  * @function default
  * @param {PluginOptions} options - plugin configuration options
- * @returns {RollupPlugin} - the configured plugin object
+ * @returns {import("rollup").Plugin} - the configured plugin object
+ * @see https://rollupjs.org/plugin-development/
  */
 export default function HandlebarsPrecompiler(options) {
   const p = new PluginImpl(options)
@@ -67,6 +58,7 @@ export default function HandlebarsPrecompiler(options) {
     name: PLUGIN_NAME,
 
     /**
+     * @type {import("rollup").ResolveIdHook}
      * @param {string} id - import identifier to resolve
      * @returns {(string | undefined)} - the plugin ID if id matches it
      * @see https://rollupjs.org/plugin-development/#resolveid
@@ -76,6 +68,7 @@ export default function HandlebarsPrecompiler(options) {
     },
 
     /**
+     * @type {import("rollup").LoadHook}
      * @param {string} id - import identifier to load
      * @returns {(string | undefined)} - the plugin helper module if id matches
      * @see https://rollupjs.org/plugin-development/#load
@@ -84,7 +77,14 @@ export default function HandlebarsPrecompiler(options) {
       return p.shouldEmitHelpersModule(id) ? p.helpersModule() : undefined
     },
 
-    /** @type {Transform} */
+    /**
+     * @type {import("rollup").TransformHook}
+     * @param {string} code - potential Handlebars template to precompile
+     * @param {string} id - import identifier of possible Handlebars template
+     * @returns {(Partial<import("rollup").SourceDescription> | undefined)} -
+     *   the precompiled Handlebars template, if id identifies a template file
+     * @see https://rollupjs.org/plugin-development/#transform
+     */
     transform: function (code, id) {
       return p.isTemplate(id) ? p.compile(code, id) : undefined
     }
