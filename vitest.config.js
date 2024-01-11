@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { defineConfig, configDefaults } from 'vitest/config'
 
 export default defineConfig({
@@ -6,7 +5,7 @@ export default defineConfig({
     outputFile: 'TESTS-TestSuites.xml',
     coverage: {
       reportsDirectory: 'coverage',
-      exclude: [...configDefaults.coverage.exclude, 'jsdoc', 'out']
+      exclude: [...(configDefaults.coverage.exclude || []), 'jsdoc', 'out']
     }
   }
 })
