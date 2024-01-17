@@ -5,7 +5,10 @@
  */
 
 declare module "*.hbs" {
-  export const RawTemplate: HandlebarsTemplateDelegate
-  export default function (context: any, options?: RuntimeOptions):
-    DocumentFragment
+  export const RawTemplate: Handlebars.TemplateDelegate
+  export interface TemplateRenderer {
+    (context: any, options?: Handlebars.RuntimeOptions): DocumentFragment
+  }
+  const Template: TemplateRenderer
+  export default Template
 }

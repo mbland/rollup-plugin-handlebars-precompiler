@@ -9,8 +9,8 @@
 import type { Assertion, AsymmetricMatchersContaining } from 'vitest'
 
 interface CustomMatchers<R = unknown> {
-  toStartWith(string): R
-  toEndWith(string): R
+  toStartWith(expected: string): R
+  toEndWith(expected: string): R
 }
 
 declare module 'vitest' {
