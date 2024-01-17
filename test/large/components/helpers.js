@@ -25,7 +25,7 @@ export default function(Handlebars) {
   /**
    * @typedef {object} LinkHelperOptions
    * @property {Object.<string, string>} hash - hash arguments from the link tag
-   * @see https://handlebarsjs.com/guide/expressions.html#helpers
+   * @see https://handlebarsjs.com/guide/expressions.html#helpers-with-hash-arguments
    */
 
   /**

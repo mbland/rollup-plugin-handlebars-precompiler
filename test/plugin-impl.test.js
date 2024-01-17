@@ -150,9 +150,12 @@ describe('PluginImpl', () => {
     })
 
     test('ignores options.compiler.{srcName,destName}', () => {
-      const impl = new PluginImpl({
-        compiler: { srcName: 'bar/baz.handlebars', destName: 'quux/xyzzy.js' }
+      // Ensures we still remove srcName and destName in the absence of type
+      // checking.
+      const config = /** @type {CompileOptions} */ ({
+        srcName: 'bar/baz.handlebars', destName: 'quux/xyzzy.js'
       })
+      const impl = new PluginImpl({ compiler: config })
 
       const { map } = impl.compile(templateStr, 'foo.hbs') ?? {}
 

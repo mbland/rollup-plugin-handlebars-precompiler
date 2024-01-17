@@ -9,7 +9,6 @@ import Template, { RawTemplate } from './introduction.hbs'
 // eslint-disable-next-line no-unused-vars
 import { InitParams } from '../types.js'
 
-
 export default class App {
   /**
    * Initializes the Introduction within the document.
