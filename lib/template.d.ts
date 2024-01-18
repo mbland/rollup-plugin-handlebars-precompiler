@@ -4,11 +4,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-declare module "*.hbs" {
-  export const RawTemplate: Handlebars.TemplateDelegate
+declare namespace HandlebarsPrecompiler {
   export interface TemplateRenderer {
     (context: any, options?: Handlebars.RuntimeOptions): DocumentFragment
   }
-  const Template: TemplateRenderer
+}
+
+declare module "*.hbs" {
+  export const RawTemplate: Handlebars.TemplateDelegate
+  const Template: HandlebarsPrecompiler.TemplateRenderer
   export default Template
 }
