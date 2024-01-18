@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-handlebars-precompiler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Rollup plugin to precompile Handlebars templates into JavaScript modules",
   "main": "index.js",
   "types": "types/index.d.ts",
@@ -31,11 +31,11 @@
   "repository": "https://github.com/mbland/rollup-plugin-handlebars-precompiler",
   "bugs": "https://github.com/mbland/rollup-plugin-handlebars-precompiler/issues",
   "devDependencies": {
-    "@stylistic/eslint-plugin-js": "^1.5.3",
-    "@types/node": "^20.11.4",
-    "@vitest/coverage-istanbul": "^1.2.0",
-    "@vitest/coverage-v8": "^1.2.0",
-    "@vitest/ui": "^1.2.0",
+    "@stylistic/eslint-plugin-js": "^1.5.4",
+    "@types/node": "^20.11.5",
+    "@vitest/coverage-istanbul": "^1.2.1",
+    "@vitest/coverage-v8": "^1.2.1",
+    "@vitest/ui": "^1.2.1",
     "eslint": "^8.56.0",
     "eslint-plugin-jsdoc": "^46.10.1",
     "eslint-plugin-vitest": "^0.3.20",
@@ -47,7 +47,7 @@
     "rollup": "^4.9.5",
     "test-page-opener": "^1.0.6",
     "typescript": "^5.3.3",
-    "vitest": "^1.2.0"
+    "vitest": "^1.2.1"
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.1.0",
